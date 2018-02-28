@@ -5,7 +5,7 @@ A tool compare text differences
 # Installation
 
 ```
-composer require "funsoul/funcompare: ~1.0"
+composer require "funsoul/funcompare: ~1.1"
 ```
 
 # Usage
