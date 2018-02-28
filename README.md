@@ -5,7 +5,7 @@ A tool compare text differences
 # Installation
 
 ```
-composer require "funsoul/funcompare: 1.0"
+composer require "funsoul/funcompare: ~1.0"
 ```
 
 # Usage
@@ -49,7 +49,7 @@ echo $res;
 
 ### wrapper()
 ```php
-use Funsoul\Funcipher\Funcipher;
+use Funsoul\Funcompare\Funcompare;
 
 $old = 'A tool compare text differences is funny';
 $new = 'A tool that compare text differences';
