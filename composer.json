@@ -1,0 +1,25 @@
+{
+    "name": "funsoul/funcompare",
+    "description": "A tool compare text differences",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "funsoul",
+            "email": "cyanming2016@gmail.com"
+        }
+    ],
+    "keywords": [
+        "text",
+        "compare",
+        "difference"
+    ],
+    "homepage": "https://github.com/funsoul/funcompare",
+    "require": {
+        "php": ">=5.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "Funsoul\\Funcompare\\": "src/"
+        }
+    }
+}
