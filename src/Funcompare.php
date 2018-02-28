@@ -27,7 +27,7 @@ Class Funcompare
     private $_new_l_wrapper = '<span class="new-word">';
     private $_new_r_wrapper = '</span>';
 
-    public function compare($oldString, $newString)
+    public function compareText($oldString, $newString)
     {
         $oldArr = preg_split('/\s+/', $oldString);
         $newArr = preg_split('/\s+/', $newString);
@@ -40,7 +40,7 @@ Class Funcompare
 
         while(!$end){
             if($tmpOldIndex <= $oldCount){
-                if($oldArr[$tmpOldIndex] === $newArr[$tmpNewIndex]){
+                if(isset($oldArr[$tmpOldIndex]) && isset($newArr[$tmpNewIndex]) && $oldArr[$tmpOldIndex] === $newArr[$tmpNewIndex]){
                     array_push($resArr, $oldArr[$tmpOldIndex]);
                     $tmpOldIndex++;
                     $tmpNewIndex++;
@@ -70,6 +70,39 @@ Class Funcompare
         return $textFinal;
     }
 
+    public function compareJson($oldJson, $newJson)
+    {
+        $oldArr = json_decode($oldJson,true);
+        $newArr = json_decode($newJson,true);
+        $res = $this->checkDiffMulti($oldArr,$newArr);
+        return json_encode($res,JSON_UNESCAPED_SLASHES);
+    }
+
+    private function checkDiffMulti($array1, $array2){
+        $result = array();
+
+        foreach($array1 as $key => $val) {
+            if(is_array($val) && isset($array2[$key])) {
+                $tmp = $this->checkDiffMulti($val, $array2[$key]);
+                if($tmp) {
+                    $result[$key] = $tmp;
+                }
+            }
+            elseif(!isset($array2[$key])) {
+                $result[$key] = null;
+            }
+            elseif($val !== $array2[$key]) {
+                $result[$key]['old'] = $this->_old_l_wrapper.$val.$this->_old_r_wrapper;
+                $result[$key]['new'] = $this->_new_l_wrapper.$array2[$key].$this->_new_r_wrapper;
+            }
+
+            if(isset($array2[$key])) {
+                unset($array2[$key]);
+            }
+        }
+        return array_merge($result, $array2);
+    }
+
     public function wrapper($oldLeftWrapper, $oldRightWrapper, $newLeftWrapper, $newRightWrapper){
         $this->_old_l_wrapper = $oldLeftWrapper;
         $this->_old_r_wrapper = $oldRightWrapper;
@@ -78,3 +111,17 @@ Class Funcompare
         return $this;
     }
 }
+
+$old = '[{"id":1,"name":"xxx","age":18,"cart":[{"id":100,"name":"rice"}]},{"id":2,"name":"aaa","age":18}]';
+$new = '[{"id":1,"name":"yyy","age":20,"cart":[{"id":100,"name":"banana"}]},{"id":2,"name":"bbb","age":18}]';
+
+$fc = new Funcompare();
+$res = $fc->compareJson($old, $new);
+echo $res.chr(10);
+
+$old = 'A tool compare text differences is funny';
+$new = 'A tool that compare text differences';
+
+$fc = new Funcompare();
+$res = $fc->wrapper('[',']','<','>')->compareText($old, $new);
+echo $res;

@@ -10,7 +10,7 @@ composer require "funsoul/funcompare: ~1.0"
 
 # Usage
 
-### compare()
+### compareText()
 ```php
 use Funsoul\Funcompare\Funcompare;
 
@@ -18,11 +18,54 @@ $old = 'A tool compare text differences is funny';
 $new = 'A tool that compare text differences';
 
 $fc = new Funcompare();
-$res = $fc->compare($old, $new);
+$res = $fc->compareText($old, $new);
 echo $res;
 
 // A tool <span class="new-word">that</span> compare text differences <span class="old-word">is</span> <span class="old-word">funny</span>
 
+```
+### compareJson()
+```php
+use Funsoul\Funcompare\Funcompare;
+
+$old = '[{"id":1,"name":"xxx","age":18,"cart":[{"id":100,"name":"rice"}]},{"id":2,"name":"aaa","age":18}]';
+$new = '[{"id":1,"name":"yyy","age":20,"cart":[{"id":100,"name":"banana"}]},{"id":2,"name":"bbb","age":18}]';
+
+$fc = new Funcompare();
+$res = $fc->compareJson($old, $new);
+echo $res
+
+// [{"name":{"old":"<span class=\"old-word\">xxx</span>","new":"<span class=\"new-word\">yyy</span>"},"age":{"old":"<span class=\"old-word\">18</span>","new":"<span class=\"new-word\">20</span>"},"cart":[{"name":{"old":"<span class=\"old-word\">rice</span>","new":"<span class=\"new-word\">banana</span>"}}]},{"name":{"old":"<span class=\"old-word\">aaa</span>","new":"<span class=\"new-word\">bbb</span>"}}]
+
+```
+
+```json
+[
+    {
+        "name":{
+            "old":"<span class="old-word">xxx</span>",
+            "new":"<span class="new-word">yyy</span>"
+        },
+        "age":{
+            "old":"<span class="old-word">18</span>",
+            "new":"<span class="new-word">20</span>"
+        },
+        "cart":[
+            {
+                "name":{
+                    "old":"<span class="old-word">rice</span>",
+                    "new":"<span class="new-word">banana</span>"
+                }
+            }
+        ]
+    },
+    {
+        "name":{
+            "old":"<span class="old-word">aaa</span>",
+            "new":"<span class="new-word">bbb</span>"
+        }
+    }
+]
 ```
 
 ### css
@@ -55,7 +98,7 @@ $old = 'A tool compare text differences is funny';
 $new = 'A tool that compare text differences';
 
 $fc = new Funcompare();
-$res = $fc->wrapper('[',']','<','>')->compare($old, $new);
+$res = $fc->wrapper('[',']','<','>')->compareText($old, $new);
 echo $res;
 
 // A tool <that> compare text differences [is] [funny]
